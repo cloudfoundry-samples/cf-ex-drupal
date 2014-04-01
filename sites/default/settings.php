@@ -212,14 +212,19 @@
  */
 
 $services = json_decode($_ENV['VCAP_SERVICES'], true);
-$service = $services['cleardb-n/a'][0];  // pick the first MySQL service
+$service = $services['elephantsql-n/a'][0];  // pick the first PostgreSQL service
+// parse creds from URL
+if (! preg_match("|postgres://(.*):(.*)@(.*):(.*)/(.*)|", $service['credentials']['uri'], $creds)) {
+    print("Couldn't parse URL [" . $service['credentials']['uri'] . "]\n");
+}
 
 $databases['default']['default'] = array(
-    'driver' => 'mysql',
-    'database' => $service['credentials']['name'],
-    'username' => $service['credentials']['username'],
-    'password' => $service['credentials']['password'],
-    'host' => $service['credentials']['hostname'],
+    'driver' => 'pgsql',
+    'database' => $creds[5],
+    'username' => $creds[1],
+    'password' => $creds[2],
+    'host' => $creds[3],
+    'port' => $creds[4],
     'prefix' => 'drupal_',
     'collation' => 'utf8_general_ci',
 );

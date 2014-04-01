@@ -8,4 +8,4 @@ applications:
   path: .
   buildpack: https://github.com/dmikusa-pivotal/cf-php-build-pack.git
   services:
-  - mysql-db
+  - pgsql-db
