@@ -212,7 +212,7 @@
  */
 
 $services = json_decode($_ENV['VCAP_SERVICES'], true);
-$service = $services['elephantsql-n/a'][0];  // pick the first PostgreSQL service
+$service = $services['elephantsql'][0];  // pick the first PostgreSQL service
 // parse creds from URL
 if (! preg_match("|postgres://(.*):(.*)@(.*):(.*)/(.*)|", $service['credentials']['uri'], $creds)) {
     print("Couldn't parse URL [" . $service['credentials']['uri'] . "]\n");
