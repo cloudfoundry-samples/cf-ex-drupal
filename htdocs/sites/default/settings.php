@@ -213,15 +213,39 @@
  * @endcode
  */
 
-$services = json_decode($_ENV['VCAP_SERVICES'], true);
-$service = $services['p-mysql'][0];  // pick the first Pivotal MySQL service
+/*
+ * Read MySQL service properties from _ENV['VCAP_SERVICES']
+ */
+$service_blob = json_decode($_ENV['VCAP_SERVICES'], true);
+$mysql_services = array();
+foreach($service_blob as $service_provider => $service_list) {
+    // looks for 'cleardb' or 'p-mysql' service
+    if ($service_provider === 'cleardb' || $service_provider === 'p-mysql') {
+        foreach($service_list as $mysql_service) {
+            $mysql_services[] = $mysql_service;
+        }
+        continue;
+    }
+    foreach ($service_list as $some_service) {
+        // looks for tags of 'mysql'
+        if (in_array('mysql', $some_service['tags'], true)) {
+            $mysql_services[] = $some_service;
+            continue;
+        }
+        // look for a service where the name includes 'mysql'
+        if (strpos($some_service['name'], 'mysql') !== false) {
+            $mysql_services[] = $some_service;
+        }
+    }
+}
 
+// Configure Drupal, using the first database found
 $databases['default']['default'] = array(
     'driver' => 'mysql',
-    'database' => $service['credentials']['name'],
-    'username' => $service['credentials']['username'],
-    'password' => $service['credentials']['password'],
-    'host' => $service['credentials']['hostname'],
+    'database' => $mysql_services[0]['credentials']['name'],
+    'username' => $mysql_services[0]['credentials']['username'],
+    'password' => $mysql_services[0]['credentials']['password'],
+    'host' => $mysql_services[0]['credentials']['hostname'],
     'prefix' => 'drupal_',
     'collation' => 'utf8_general_ci',
 );
