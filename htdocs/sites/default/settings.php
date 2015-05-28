@@ -83,11 +83,13 @@
  * webserver.  For most other drivers, you must specify a
  * username, password, host, and database name.
  *
- * Some database engines support transactions.  In order to enable
- * transaction support for a given database, set the 'transactions' key
- * to TRUE.  To disable it, set it to FALSE.  Note that the default value
- * varies by driver.  For MySQL, the default is FALSE since MyISAM tables
- * do not support transactions.
+ * Transaction support is enabled by default for all drivers that support it,
+ * including MySQL. To explicitly disable it, set the 'transactions' key to
+ * FALSE.
+ * Note that some configurations of MySQL, such as the MyISAM engine, don't
+ * support it and will proceed silently even if enabled. If you experience
+ * transaction related crashes with such configuration, set the 'transactions'
+ * key to FALSE.
  *
  * For each database, you may optionally specify multiple "target" databases.
  * A target database allows Drupal to try to send certain queries to a
@@ -212,20 +214,15 @@
  */
 
 $services = json_decode($_ENV['VCAP_SERVICES'], true);
-$service = $services['elephantsql'][0];  // pick the first PostgreSQL service
-// parse creds from URL
-if (! preg_match("|postgres://(.*):(.*)@(.*):(.*)/(.*)|", $service['credentials']['uri'], $creds)) {
-    print("Couldn't parse URL [" . $service['credentials']['uri'] . "]\n");
-}
+$service = $services['p-mysql'][0];  // pick the first Pivotal MySQL service
 
 $databases['default']['default'] = array(
-    'driver' => 'pgsql',
-    'database' => $creds[5],
-    'username' => $creds[1],
-    'password' => $creds[2],
-    'host' => $creds[3],
-    'port' => $creds[4],
-    'prefix' => 'drupal_',
+    'driver' => 'mysql',
+    'database' => $service['credentials']['name'],
+    'username' => $service['credentials']['username'],
+    'password' => $service['credentials']['password'],
+    'host' => $service['credentials']['host'],
+    'previx' => 'drupal_',
     'collation' => 'utf8_general_ci',
 );
 
@@ -450,6 +447,18 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['js_gzip_compression'] = FALSE;
 
 /**
+ * Block caching:
+ *
+ * Block caching may not be compatible with node access modules depending on
+ * how the original block cache policy is defined by the module that provides
+ * the block. By default, Drupal therefore disables block caching when one or
+ * more modules implement hook_node_grants(). If you consider block caching to
+ * be safe on your site and want to bypass this restriction, uncomment the line
+ * below.
+ */
+# $conf['block_cache_bypass_node_grants'] = TRUE;
+
+/**
  * String overrides:
  *
  * To override specific strings on your site with or without enabling the Locale
@@ -520,10 +529,10 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
  * server response time when loading 404 error pages and prevents the 404 error
  * from being logged in the Drupal system log. In order to prevent valid pages
  * such as image styles and other generated content that may match the
- * '404_fast_html' regular expression from returning 404 errors, it is necessary
- * to add them to the '404_fast_paths_exclude' regular expression above. Make
- * sure that you understand the effects of this feature before uncommenting the
- * line below.
+ * '404_fast_paths' regular expression from returning 404 errors, it is
+ * necessary to add them to the '404_fast_paths_exclude' regular expression
+ * above. Make sure that you understand the effects of this feature before
+ * uncommenting the line below.
  */
 # drupal_fast_404();
 
