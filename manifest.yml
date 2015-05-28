@@ -1,11 +1,10 @@
 ---
 applications:
-- name: mydrupal
+- name: drupal
   memory: 128M 
   instances: 1
-  host: mydrupal
+  host: drupal-running-on
   domain: cfapps.io
   path: .
-  buildpack: https://github.com/dmikusa-pivotal/cf-php-build-pack.git
   services:
-  - pgsql-db
+  - p-mysql-db
