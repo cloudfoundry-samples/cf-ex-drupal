@@ -222,7 +222,7 @@ $databases['default']['default'] = array(
     'username' => $service['credentials']['username'],
     'password' => $service['credentials']['password'],
     'host' => $service['credentials']['hostname'],
-    'previx' => 'drupal_',
+    'prefix' => 'drupal_',
     'collation' => 'utf8_general_ci',
 );
 
