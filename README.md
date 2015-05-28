@@ -44,23 +44,13 @@ When you push the application here's what happens.
 
 ### Changes
 
-1. I include a custom list of HTTPD modules.  This allows us to enable `mod_access_compat`, which is necessary because Drupal's `.htaccess` file still uses HTTPD 2.2 config.
+1. I include a [custom list of HTTPD modules](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.bp-config/httpd/extra/httpd-modules.conf#L15).  These are the same as the default, but I've added `mod_access_compat`, which is necessary because Drupal's `.htaccess` file still uses HTTPD 2.2 config.
 
-1. I add the following PHP extensions which are needed by Drupal.
+1. I [add the PHP extensions](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.bp-config/options.json#L2) that are needed by Drupal.
 
-  - bz2
-  - zlib
-  - curl
-  - mcrypt
-  - gd
-  - pdo
-  - pdo_mysql
-  - apc
-  - mbstring
+1. I add a [custom build pack extension](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.extensions/drupal/extension.py), which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that will be installed is [here](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.extensions/drupal/extension.py#L15).
 
-1. I add a custom build pack extension, which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that's installed is listed in this file, `.extensions/drupal/extension.py`.
-
-1. We include a copy of the default settings from the standard Drupal install.  This is modified to pull the database configuration from the `VCAP_SERVICES` environment variable, which is populated with information from services that are bound to the app.  Since we bind a MySQL service to our app in the instructions above, we search for that and automatically configure it for use with Drupal.
+1. I include a [copy of the default settings from the standard Drupal install](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php).  This is [modified](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php#L216-L251) to pull the database configuration from the `VCAP_SERVICES` environment variable, which is populated with information from services that are bound to the app.  Since we bind a MySQL service to our app in the instructions above, we search for that and automatically configure it for use with Drupal.
 
 ### Caution
 
