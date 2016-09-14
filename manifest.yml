@@ -1,6 +1,6 @@
 ---
 applications:
-- name: drupal
+- name: cf-ex-drupal
   memory: 128M
   instances: 1
   path: .
