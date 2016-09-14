@@ -16,10 +16,8 @@ This is an out-of-the-box implementation of Drupal.  It's an example of how comm
 1.  If you don't have one already, create a MySQL service.  With Pivotal Web Services, the following command will create a free MySQL database through [ClearDb].  Any MySQL provider should work.
 
   ```bash
-  cf create-service cleardb spark my-test-mysql-db
+  cf create-service cleardb spark mysql
   ```
-
-1. Edit the manifest.yml file.  Change the `host` attribute to something unique.  Then under `services:` change `p-mysql-db` to the name of your MySQL service.  This is the name of the service that will be bound to your application and thus used by Drupal.
 
 1. Edit `sites/default/settings.php` and change the `drupal_hash_salt`.  This should be uniqe for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
 
