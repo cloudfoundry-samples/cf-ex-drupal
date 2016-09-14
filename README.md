@@ -9,7 +9,7 @@ This is an out-of-the-box implementation of Drupal.  It's an example of how comm
 1. Clone the app (i.e. this repo).
 
   ```bash
-  git clone https://github.com/dmikusa-pivotal/cf-ex-drupal.git cf-ex-drupal
+  git clone https://github.com/cloudfoundry-samples/cf-ex-drupal.git cf-ex-drupal
   cd cf-ex-drupal
   ```
 
@@ -42,13 +42,13 @@ When you push the application here's what happens.
 
 ### Changes
 
-1. I include a [custom list of HTTPD modules](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.bp-config/httpd/extra/httpd-modules.conf#L15).  These are the same as the default, but I've added `mod_access_compat`, which is necessary because Drupal's `.htaccess` file still uses HTTPD 2.2 config.
+1. I include a [custom list of HTTPD modules](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.bp-config/httpd/extra/httpd-modules.conf#L15).  These are the same as the default, but I've added `mod_access_compat`, which is necessary because Drupal's `.htaccess` file still uses HTTPD 2.2 config.
 
-1. I [add the PHP extensions](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.bp-config/options.json#L2) that are needed by Drupal.
+1. I [add the PHP extensions](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.bp-config/options.json#L2) that are needed by Drupal.
 
-1. I add a [custom build pack extension](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.extensions/drupal/extension.py), which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that will be installed is [here](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/.extensions/drupal/extension.py#L15).
+1. I add a [custom build pack extension](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py), which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that will be installed is [here](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py#L15).
 
-1. I include a [copy of the default settings from the standard Drupal install](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php).  This is [modified](https://github.com/dmikusa-pivotal/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php#L216-L251) to pull the database configuration from the `VCAP_SERVICES` environment variable, which is populated with information from services that are bound to the app.  Since we bind a MySQL service to our app in the instructions above, we search for that and automatically configure it for use with Drupal.
+1. I include a [copy of the default settings from the standard Drupal install](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php).  This is [modified](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php#L216-L251) to pull the database configuration from the `VCAP_SERVICES` environment variable, which is populated with information from services that are bound to the app.  Since we bind a MySQL service to our app in the instructions above, we search for that and automatically configure it for use with Drupal.
 
 ### Caution
 
@@ -61,6 +61,6 @@ Please read the following before using Drupal in production on CloudFoundry.
 1. This is not an issue with Drupal specifically, but PHP stores session information to the local disk.  As mentioned previously, the local disk for an application on CloudFoundry is ephemeral, so it is possible for you to lose session and session data.  If you need reliable session storage, look at storing session data in an SQL database or with a NoSQL service.
 
 
-[PHP Build Pack]:https://github.com/dmikusa-pivotal/cf-php-build-pack
+[PHP Buildpack]:https://github.com/cloudfoundry/php-buildpack
 [ClearDb]:https://www.cleardb.com/
 [local storage on CloudFoundry]:http://docs.cloudfoundry.org/devguide/deploy-apps/prepare-to-deploy.html#filesystem
