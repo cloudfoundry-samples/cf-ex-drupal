@@ -8,24 +8,24 @@ This is an out-of-the-box implementation of Drupal.  It's an example of how comm
 
 1. Clone the app (i.e. this repo).
 
-  ```bash
-  git clone https://github.com/18F/cf-ex-drupal.git cf-ex-drupal
-  cd cf-ex-drupal
-  ```
+    ```bash
+    git clone https://github.com/18F/cf-ex-drupal.git cf-ex-drupal
+    cd cf-ex-drupal
+    ```
 
 1.  If you don't have one already, create a MySQL service. If you have a cloud.gov account, the following command will create a free MySQL database.
 
-  ```bash
-  cf create-service aws-rds shared-mysql my-db-service
-  ```
+    ```bash
+    cf create-service aws-rds shared-mysql my-db-service
+    ```
 
 1. Edit `htdocs/sites/default/settings.php` and change the `drupal_hash_salt`.  This should be unique for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
 
 1. Push it to cloud.gov.
 
-  ```bash
-  cf push
-  ```
+    ```bash
+    cf push
+    ```
 
 1. On your first push, you'll need to access the install script.  It'll be `http://<your-host-name>.cfapps.io/install.php`.  Follow instructions there to complete the install.  After it's done, you'll be all set.
 
