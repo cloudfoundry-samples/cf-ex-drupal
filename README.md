@@ -1,8 +1,8 @@
-## cloud.gov example application: Drupal
+## cloud.gov example application: Drupal 7
 
 This is an example application that can be run on [cloud.gov](https://www.cloud.gov) using the [PHP Buildpack](http://docs.cloudfoundry.org/buildpacks/php/index.html).
 
-This is an out-of-the-box implementation of Drupal.  It's an example of how common PHP applications can easily be run on cloud.gov.
+This is an out-of-the-box implementation of Drupal 7.  It's an example of how common PHP applications can easily be run on cloud.gov.
 
 ### Usage
 
