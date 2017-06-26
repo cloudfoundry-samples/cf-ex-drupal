@@ -21,6 +21,8 @@ This is an out-of-the-box implementation of Drupal 7.  It's an example of how co
 
 1. Edit `htdocs/sites/default/settings.php` and change the `drupal_hash_salt`.  This should be unique for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
 
+2. Edit `manifest.yml` and change `change-this-hostname-in-manifest-yml` to anything you'd like. If after pushing you get an error that `The route <your-host-name>.app.cloud.gov is already in use`, this value is the one to change.
+
 1. Push it to cloud.gov.
 
     ```bash
