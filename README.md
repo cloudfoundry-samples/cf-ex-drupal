@@ -1,43 +1,45 @@
-## CloudFoundry PHP Example Application: Drupal 
+## cloud.gov example application: Drupal 7
 
-This is an example application which can be run on CloudFoundry using the [PHP Build Pack].
+This is an example application that can be run on [cloud.gov](https://www.cloud.gov) using the [PHP Buildpack](http://docs.cloudfoundry.org/buildpacks/php/index.html).
 
-This is an out-of-the-box implementation of Drupal.  It's an example of how common PHP applications can easily be run on CloudFoundry.
+This is an out-of-the-box implementation of Drupal 7.  It's an example of how common PHP applications can easily be run on cloud.gov.
 
 ### Usage
 
 1. Clone the app (i.e. this repo).
 
-  ```bash
-  git clone https://github.com/cloudfoundry-samples/cf-ex-drupal.git cf-ex-drupal
-  cd cf-ex-drupal
-  ```
+    ```bash
+    git clone https://github.com/18F/cf-ex-drupal.git cf-ex-drupal
+    cd cf-ex-drupal
+    ```
 
-1.  If you don't have one already, create a MySQL service.  With Pivotal Web Services, the following command will create a free MySQL database through [ClearDb].  Any MySQL provider should work.
+1.  If you don't have one already, create a MySQL service. If you have a cloud.gov account, the following command will create a free MySQL database.
 
-  ```bash
-  cf create-service cleardb spark mysql
-  ```
+    ```bash
+    cf create-service aws-rds shared-mysql my-db-service
+    ```
 
-1. Edit `sites/default/settings.php` and change the `drupal_hash_salt`.  This should be uniqe for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
+1. Edit `htdocs/sites/default/settings.php` and change the `drupal_hash_salt`.  This should be unique for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
 
-1. Push it to CloudFoundry.
+2. Edit `manifest.yml` and change `change-this-hostname-in-manifest-yml` to anything you'd like. If after pushing you get an error that `The route <your-host-name>.app.cloud.gov is already in use`, this value is the one to change.
 
-  ```bash
-  cf push
-  ```
+3. Push the app to cloud.gov.
 
-1. On your first push, you'll need to access the install script.  It'll be `http://<your-host-name>.cfapps.io/install.php`.  Follow instructions there to complete the install.  After it's done, you'll be all set.
+    ```bash
+    cf push
+    ```
+
+1. On your first push, you'll need to access the install script.  It'll be `http://<your-host-name>.app.cloud.gov/install.php`.  Follow instructions there to complete the install.  After it's done, you'll be all set.
 
 
 ### How It Works
 
 When you push the application here's what happens.
 
-1. The local bits are pushed to your target.  This is small, five files around 25k. It includes the changes we made and a build pack extension for Drupal.
-1. The server downloads the [PHP Build Pack] and runs it.  This installs HTTPD and PHP.
-1. The build pack sees the extension that we pushed and runs it.  The extension downloads the stock Drupal file from their server, unzips it and installs it into the `htdocs` directory.  It then copies the rest of the files that we pushed and replaces the default Drupal files with them.  In this case, it's just the `sites/default/settings.php` file.
-1. At this point, the build pack is done and CF runs our droplet.
+1. The local bits are pushed to your target. This is small, five files around 25k. It includes the changes we made and a buildpack extension for Drupal.
+1. The server downloads the [PHP Buildpack] and runs it. This installs HTTPD and PHP.
+1. The buildpack sees the extension that we pushed and runs it. The extension downloads the stock Drupal file from their server, unzips it and installs it into the `htdocs` directory. It then copies the rest of the files that we pushed and replaces the default Drupal files with them. In this case, it's just the `htdocs/sites/default/settings.php` file.
+1. At this point, the buildpack is done and cloud.gov runs our droplet.
 
 
 ### Changes
@@ -46,7 +48,7 @@ When you push the application here's what happens.
 
 1. I [add the PHP extensions](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.bp-config/options.json#L2) that are needed by Drupal.
 
-1. I add a [custom build pack extension](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py), which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that will be installed is [here](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py#L15).
+1. I add a [custom buildpack extension](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py), which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that will be installed is [here](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py#L15).
 
 1. I include a [copy of the default settings from the standard Drupal install](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php).  This is [modified](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php#L216-L251) to pull the database configuration from the `VCAP_SERVICES` environment variable, which is populated with information from services that are bound to the app.  Since we bind a MySQL service to our app in the instructions above, we search for that and automatically configure it for use with Drupal.
 
@@ -62,5 +64,4 @@ Please read the following before using Drupal in production on CloudFoundry.
 
 
 [PHP Buildpack]:https://github.com/cloudfoundry/php-buildpack
-[ClearDb]:https://www.cleardb.com/
 [local storage on CloudFoundry]:http://docs.cloudfoundry.org/devguide/deploy-apps/prepare-to-deploy.html#filesystem

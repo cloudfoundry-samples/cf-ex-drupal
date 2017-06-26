@@ -219,8 +219,8 @@
 $service_blob = json_decode($_ENV['VCAP_SERVICES'], true);
 $mysql_services = array();
 foreach($service_blob as $service_provider => $service_list) {
-    // looks for 'cleardb' or 'p-mysql' service
-    if ($service_provider === 'cleardb' || $service_provider === 'p-mysql') {
+    // looks for 'aws-rds' service
+    if ($service_provider === 'aws-rds') {
         foreach($service_list as $mysql_service) {
             $mysql_services[] = $mysql_service;
         }
@@ -242,10 +242,10 @@ foreach($service_blob as $service_provider => $service_list) {
 // Configure Drupal, using the first database found
 $databases['default']['default'] = array(
     'driver' => 'mysql',
-    'database' => $mysql_services[0]['credentials']['name'],
+    'database' => $mysql_services[0]['credentials']['db_name'],
     'username' => $mysql_services[0]['credentials']['username'],
     'password' => $mysql_services[0]['credentials']['password'],
-    'host' => $mysql_services[0]['credentials']['hostname'],
+    'host' => $mysql_services[0]['credentials']['host'],
     'prefix' => 'drupal_',
     'collation' => 'utf8_general_ci',
 );
