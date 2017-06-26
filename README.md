@@ -23,7 +23,7 @@ This is an out-of-the-box implementation of Drupal 7.  It's an example of how co
 
 2. Edit `manifest.yml` and change `change-this-hostname-in-manifest-yml` to anything you'd like. If after pushing you get an error that `The route <your-host-name>.app.cloud.gov is already in use`, this value is the one to change.
 
-1. Push it to cloud.gov.
+3. Push the app to cloud.gov.
 
     ```bash
     cf push
