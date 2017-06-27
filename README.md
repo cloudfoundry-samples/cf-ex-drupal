@@ -21,15 +21,13 @@ This is an out-of-the-box implementation of Drupal 7.  It's an example of how co
 
 1. Edit `htdocs/sites/default/settings.php` and change the `drupal_hash_salt`.  This should be unique for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
 
-2. Edit `manifest.yml` and change `change-this-hostname-in-manifest-yml` to anything you'd like. If after pushing you get an error that `The route <your-host-name>.app.cloud.gov is already in use`, this value is the one to change.
-
-3. Push the app to cloud.gov.
+2. Push the app to cloud.gov.
 
     ```bash
-    cf push
+    cf push --random-route
     ```
 
-1. On your first push, you'll need to access the install script.  It'll be `http://<your-host-name>.app.cloud.gov/install.php`.  Follow instructions there to complete the install.  After it's done, you'll be all set.
+1. On your first push, you'll need to access the install script. It'll be `http://<the-'urls'-value-the-command-line-just-confirmed>/install.php`. (The `urls` value will end with `.app.cloud.gov`.) Follow instructions there to complete the install.  After it's done, you'll be all set.
 
 
 ### How It Works
