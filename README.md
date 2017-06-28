@@ -27,8 +27,7 @@ This is an out-of-the-box implementation of Drupal 7.  It's an example of how co
     cf push --random-route
     ```
 
-1. On your first push, you'll need to access the install script. It'll be `http://<the-'urls'-value-the-command-line-just-confirmed>/install.php`. (The `urls` value will end with `.app.cloud.gov`.) Follow instructions there to complete the install.  After it's done, you'll be all set.
-
+1. On your first push, you'll need to access the install script. It'll be `https://<the-'urls'-value-the-command-line-just-confirmed>/install.php`. (The `urls` value will end with `.app.cloud.gov`.) Follow instructions there to complete the install.  After it's done, you'll be all set.
 
 ### How It Works
 
@@ -62,4 +61,4 @@ Please read the following before using Drupal in production on CloudFoundry.
 
 
 [PHP Buildpack]:https://github.com/cloudfoundry/php-buildpack
-[local storage on CloudFoundry]:http://docs.cloudfoundry.org/devguide/deploy-apps/prepare-to-deploy.html#filesystem
+[local storage on CloudFoundry]:https://docs.cloudfoundry.org/devguide/deploy-apps/prepare-to-deploy.html#filesystem
