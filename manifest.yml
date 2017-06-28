@@ -1,7 +1,6 @@
 ---
 applications:
 - name: cf-ex-drupal
-  host: change-this-hostname-in-manifest-yml
   memory: 128M
   instances: 1
   path: .
