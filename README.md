@@ -1,6 +1,6 @@
 ## cloud.gov example application: Drupal 7
 
-This is an example application that can be run on [cloud.gov](https://www.cloud.gov) using the [PHP Buildpack](http://docs.cloudfoundry.org/buildpacks/php/index.html).
+This is an example application that can be run on [cloud.gov](https://www.cloud.gov) using the [PHP Buildpack](https://docs.cloudfoundry.org/buildpacks/php/index.html).
 
 This is an out-of-the-box implementation of Drupal 7.  It's an example of how common PHP applications can easily be run on cloud.gov.
 
@@ -51,9 +51,9 @@ When you push the application here's what happens.
 
 ### Caution
 
-Please read the following before using Drupal in production on CloudFoundry.
+Please read the following before using Drupal in production on Cloud Foundry.
 
-1. Drupal is designed to write to the local file system.  This does not work well with CloudFoundry, as an application's [local storage on CloudFoundry] is ephemeral.  In other words, Drupal will write things to the local disk and they will eventually disappear.  
+1. Drupal is designed to write to the local file system.  This does not work well with Cloud Foundry, as an application's [local storage on Cloud Foundry] is ephemeral.  In other words, Drupal will write things to the local disk and they will eventually disappear.  
 
   You can work around this in some cases, like with media, by using a storage service like Amazon S3 or CloudFront.  However there may be other cases where Drupal or Drupal plugins try to write to the disk, so test your installation carefully.
 
