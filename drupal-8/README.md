@@ -7,8 +7,8 @@ brew install homebrew/php/composer
 ```
 created with
 ```
- composer create-project drupal-composer/drupal-project:8.x-dev cg-drupal8-example --stability dev --no-interaction
- ```
+composer create-project drupal-composer/drupal-project:8.x-dev cg-drupal8-example --stability dev --no-interaction
+```
 
 Trying lando locally  from github.com/lando
 
@@ -36,5 +36,18 @@ Added manifest.yml with built-in service reference to drupal8-example-db and dru
 
 Updated settings.php to pull DB from ENV 
 
+`cf push` initially fails because:
 
+```
+Could not scan for classes inside "scripts/composer/ScriptHandler.php" which does not appear to be a file nor a folder
+Class DrupalProject\composer\ScriptHandler is not autoloadable, can not call pre-install-cmd script
+```
 
+Which I stepped over with by eliding it from composer.json:
+
+```
+    "autoload": {
+        "classmap": [
+            "scripts/composer/ScriptHandler.php" // deleted this line
+        ]
+```
