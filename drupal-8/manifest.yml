@@ -5,5 +5,5 @@ applications:
   disk_quota: 1023M
   buildpack: php_buildpack
   services:
-  - project-planner-db
-  - project-planner-s3
+  - drupal8-example-db
+  - drupal8-example-s3
