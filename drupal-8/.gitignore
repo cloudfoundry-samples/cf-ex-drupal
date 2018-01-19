@@ -7,9 +7,14 @@
 /web/profiles/contrib/
 /web/libraries/
 
-# Ignore sensitive information
-/web/sites/*/settings.php
-/web/sites/*/settings.local.php
+
+# Ignore sensitive information [This is a `composer` default]
+# /web/sites/*/settings.php
+# /web/sites/*/settings.local.php
+
+# For cloud.gov and cloud foundry, no sensitive information
+# is stored in the settings files, and we need to code stored
+# for parsing environment variables.
 
 # Ignore Drupal's file directory
 /web/sites/*/files/
