@@ -30,7 +30,11 @@ Note that the DB is hostname `database`, and now if you go to the site at
 http://cg-drupal-8-example.lndo.site you can configure it. The settings, at
 this point though, are all saved in `drupal-8/web/sites/default/settings.php`
 
+## Trying on cloud.gov
 
+Added manifest.yml with built-in service reference to drupal8-example-db and drupal8-example-s3
+
+Updated settings.php to pull DB from ENV 
 
 
 

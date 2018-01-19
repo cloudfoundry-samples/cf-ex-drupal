@@ -1,0 +1,9 @@
+---
+applications:
+- name: drupal8-example
+  memory: 128M
+  disk_quota: 1023M
+  buildpack: php_buildpack
+  services:
+  - project-planner-db
+  - project-planner-s3
