@@ -26,7 +26,11 @@ Setup DB using info from...:
 lando info
 ```
 
-Note that the DB is hostname `database`
+Note that the DB is hostname `database`, and now if you go to the site at
+http://cg-drupal-8-example.lndo.site you can configure it. The settings, at
+this point though, are all saved in `drupal-8/web/sites/default/settings.php`
+
+
 
 
 
