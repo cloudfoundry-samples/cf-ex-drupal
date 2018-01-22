@@ -3,7 +3,9 @@ applications:
 - name: drupal8-example
   memory: 128M
   disk_quota: 1023M
-  buildpack: php_buildpack
-  services:
-  - drupal8-example-db
-  - drupal8-example-s3
+  #buildpack: php_buildpack
+  #buildpack:  https://github.com/cloudfoundry/php-buildpack.git#v4.3.26
+  buildpack:  https://github.com/cloudfoundry/php-buildpack.git
+#  services:
+#  - drupal8-example-db
+#  - drupal8-example-s3
