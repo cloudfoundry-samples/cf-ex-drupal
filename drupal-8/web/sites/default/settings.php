@@ -183,7 +183,7 @@ $settings['install_profile'] = 'minimal';
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = 'foobar'
+$settings['hash_salt'] = 'foobar';
 
 /** 
 * TODO: reinstate from project-planner if needed:# 
