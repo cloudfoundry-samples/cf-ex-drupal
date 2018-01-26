@@ -51,3 +51,25 @@ Which I stepped over with by eliding it from composer.json:
             "scripts/composer/ScriptHandler.php" // deleted this line
         ]
 ```
+
+## multi buildpacks
+
+https://docs.cloudfoundry.org/buildpacks/use-multiple-buildpacks.html
+
+Push the application with the binary buildpack with the --no-start flag:
+
+```
+cf push drupal8-example --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
+```
+
+This command pushes the application but does not start it.
+Upgrade the application to multiple buildpacks, and specify the buildpacks:
+
+```
+cf v3-push drupal8-example -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
+```
+
+export PATH=$PATH:~/deps/0/apt/usr/lib/postgresql/9.3/bin:~/deps/0/bin:~/app/php/bin
+
+cd app/web/
+../drush/drush/drush si
