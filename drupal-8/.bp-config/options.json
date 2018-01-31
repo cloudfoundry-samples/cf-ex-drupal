@@ -7,6 +7,7 @@
   "WEBDIR": "web",
   "PHP_EXTENSIONS": [ "bz2", "zlib", "curl", "mcrypt", "gd", "pdo", "pdo_pgsql", "mbstring"],
   "ADDITIONAL_PREPROCESS_CMDS": [
-    "cd web && drush site-install --account-name=joe --account-pass=mom"
+    "env > env.out",
+    "set > set.out"
   ]
 }

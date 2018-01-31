@@ -73,3 +73,37 @@ export PATH=$PATH:~/deps/0/apt/usr/lib/postgresql/9.3/bin:~/deps/0/bin:~/app/php
 
 cd app/web/
 ../drush/drush/drush si
+
+
+```
+export DEPS_DIR=/home/vcap/deps
+export HOME=/home/vcap/app
+export TMPDIR=/home/vcap/tmp
+cd /home/vcap/app
+
+export PATH=/home/vcap/deps/0/apt/usr/lib/postgresql/9.3/bin:$PATH
+export PATH="$DEPS_DIR/0/bin:$PATH"
+export LD_LIBRARY_PATH="$DEPS_DIR/0/lib:$LD_LIBRARY_PATH"
+export LIBRARY_PATH="$DEPS_DIR/0/lib:$LIBRARY_PATH"
+
+dburl=$(echo $VCAP_SERVICES | jq -r '.["aws-rds"][0].credentials.uri')
+
+drush site-install minimal install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL  --account-name=joe --account-pass=mom -y -db-url="$dburl"
+```
+
+```
+export PATH=$PATH:/bin:/usr/bin:/home/vcap/app/php/bin:/home/vcap/app/php/sbin:/home/vcap/app/psql/bin:/home/vcap/app/.apt/usr/bin
+
+export PHPRC=/home/vcap/app/php/etc/php.ini
+
+creds=$(echo $VCAP_SERVICES | jq -r '.["aws-rds"][0].credentials')
+
+db_type=postgres
+db_username=$(echo $creds | jq -r '.username)
+db_password=$(echo $creds | jq -r '.password)
+db_port=$(echo $creds | jq -r '.port)
+db_host=$(echo $creds | jq -r '.host)
+db_name=$(echo $creds | jq -r '.db_name)
+
+
+drupal site:install minimal --langcode="en"--account-name=joe --account-pass=mom -y -db-url="$dburl" 

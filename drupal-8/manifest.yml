@@ -3,7 +3,7 @@ applications:
 - name: drupal8-example
   memory: 128M
   disk_quota: 512M
-  timeout: 600
+  timeout: 180
   services:
     - drupal8-example-db
     - drupal8-example-s3
