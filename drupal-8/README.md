@@ -32,6 +32,10 @@ this point though, are all saved in `drupal-8/web/sites/default/settings.php`
 
 ## Trying on cloud.gov
 
+```
+cf create-service aws-rds medium-psql drupal8-example-db
+```
+
 Added manifest.yml with built-in service reference to drupal8-example-db and drupal8-example-s3
 
 Updated settings.php to pull DB from ENV 
@@ -69,41 +73,43 @@ Upgrade the application to multiple buildpacks, and specify the buildpacks:
 cf v3-push drupal8-example -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
 ```
 
-export PATH=$PATH:~/deps/0/apt/usr/lib/postgresql/9.3/bin:~/deps/0/bin:~/app/php/bin
-
-cd app/web/
-../drush/drush/drush si
-
+SSH
 
 ```
+cf ssh drupal8-example 
+
+##
+
 export DEPS_DIR=/home/vcap/deps
-export HOME=/home/vcap/app
+export PYTHONPATH=/home/vcap/app/.bp/lib
 export TMPDIR=/home/vcap/tmp
-cd /home/vcap/app
+export LIBRARY_PATH=/home/vcap/deps/0/lib
+export PHPRC=/home/vcap/app/php/etc
+export LD_LIBRARY_PATH=/home/vcap/deps/0/lib:/home/vcap/app/php/lib
+export CF_SYSTEM_CERT_PATH=/etc/cf-system-certificates
+export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/php/bin:/home/vcap/app/php/sbin
 
-export PATH=/home/vcap/deps/0/apt/usr/lib/postgresql/9.3/bin:$PATH
-export PATH="$DEPS_DIR/0/bin:$PATH"
-export LD_LIBRARY_PATH="$DEPS_DIR/0/lib:$LD_LIBRARY_PATH"
-export LIBRARY_PATH="$DEPS_DIR/0/lib:$LIBRARY_PATH"
 
-dburl=$(echo $VCAP_SERVICES | jq -r '.["aws-rds"][0].credentials.uri')
-
-drush site-install minimal install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL  --account-name=joe --account-pass=mom -y -db-url="$dburl"
-```
-
-```
-export PATH=$PATH:/bin:/usr/bin:/home/vcap/app/php/bin:/home/vcap/app/php/sbin:/home/vcap/app/psql/bin:/home/vcap/app/.apt/usr/bin
-
-export PHPRC=/home/vcap/app/php/etc/php.ini
 
 creds=$(echo $VCAP_SERVICES | jq -r '.["aws-rds"][0].credentials')
-
 db_type=postgres
-db_username=$(echo $creds | jq -r '.username)
-db_password=$(echo $creds | jq -r '.password)
-db_port=$(echo $creds | jq -r '.port)
-db_host=$(echo $creds | jq -r '.host)
-db_name=$(echo $creds | jq -r '.db_name)
+db_user=$(echo $creds | jq -r '.username')
+db_pass=$(echo $creds | jq -r '.password')
+db_port=$(echo $creds | jq -r '.port')
+db_host=$(echo $creds | jq -r '.host')
+db_name=$(echo $creds | jq -r '.db_name')
+
+cd app/web
 
 
-drupal site:install minimal --langcode="en"--account-name=joe --account-pass=mom -y -db-url="$dburl" 
+drupal site:install minimal --no-interaction \
+  --langcode="en" \
+  --account-name=joe --account-pass=mom \
+  --db-type=$db_type \
+  --db-user=$db_user \
+  --db-pass=$db_pass \
+  --db-port=$db_port \
+  --db-host=$db_host \
+  --db-name=$db_name 
+```
+

@@ -1,7 +1,7 @@
 ---
 applications:
 - name: drupal8-example
-  memory: 128M
+  memory: 512M
   disk_quota: 512M
   timeout: 180
   services:
