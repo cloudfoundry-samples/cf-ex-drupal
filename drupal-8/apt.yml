@@ -1,3 +1,3 @@
 ---
 packages:
-- postgresql-client
+- mysql-client

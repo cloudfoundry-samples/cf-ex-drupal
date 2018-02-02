@@ -1,3 +1,11 @@
+# Working with Drupal8 in cloud.gov (and Cloud Foundry)
+
+[Drupal](https://drupal.org) has been a popular PHP-based framework for content-management systems and web applications. It was not written as a cloud-native framework, so it takes a bit of tweaking to run on cloud.gov. If you're on a _greenfield_ project you may want to consider [Laravel](https://laravel.com) as your framework, but if you're going forward with Drupal then this guide will get you there.
+
+This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` and `s3` with your site equivalents and everything should just work.
+
+
+
 
 
 # local notes
@@ -7,7 +15,7 @@ brew install homebrew/php/composer
 ```
 created with
 ```
-composer create-project drupal-composer/drupal-project:8.x-dev cg-drupal8-example --stability dev --no-interaction
+composer create-project drupal-composer/drupal-project:8.x-dev cg-d8ex --stability dev --no-interaction
 ```
 
 Trying lando locally  from github.com/lando
@@ -33,10 +41,11 @@ this point though, are all saved in `drupal-8/web/sites/default/settings.php`
 ## Trying on cloud.gov
 
 ```
-cf create-service aws-rds medium-psql drupal8-example-db
+#cf create-service aws-rds medium-psql d8ex-db
+cf create-service aws-rds shared-mysql d8ex-db
 ```
 
-Added manifest.yml with built-in service reference to drupal8-example-db and drupal8-example-s3
+Added manifest.yml with built-in service reference to d8ex-db and d8ex-s3
 
 Updated settings.php to pull DB from ENV 
 
@@ -63,20 +72,20 @@ https://docs.cloudfoundry.org/buildpacks/use-multiple-buildpacks.html
 Push the application with the binary buildpack with the --no-start flag:
 
 ```
-cf push drupal8-example --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
+cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
 ```
 
 This command pushes the application but does not start it.
 Upgrade the application to multiple buildpacks, and specify the buildpacks:
 
 ```
-cf v3-push drupal8-example -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
+cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
 ```
 
 SSH
 
 ```
-cf ssh drupal8-example 
+cf ssh d8ex 
 
 ##
 
@@ -92,7 +101,7 @@ export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/ph
 
 
 creds=$(echo $VCAP_SERVICES | jq -r '.["aws-rds"][0].credentials')
-db_type=postgres
+db_type=mysql
 db_user=$(echo $creds | jq -r '.username')
 db_pass=$(echo $creds | jq -r '.password')
 db_port=$(echo $creds | jq -r '.port')
@@ -112,4 +121,11 @@ drupal site:install minimal --no-interaction \
   --db-host=$db_host \
   --db-name=$db_name 
 ```
+Me will be abashed if Googling, after all this time, `drupal8 heroku` actually yields something useful
+
+Whew, these are complementary to what I'm doing, but wouldn't have solved anything 
+that I got stuck on this week.
+
+https://www.fomfus.com/articles/how-to-create-a-drupal-8-project-for-heroku-part-1
+https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-2
 
