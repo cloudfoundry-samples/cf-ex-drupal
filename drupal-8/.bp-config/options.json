@@ -7,6 +7,6 @@
   "WEBDIR": "web",
   "PHP_EXTENSIONS": [ "bz2", "zlib", "curl", "mcrypt", "gd", "pdo", "pdo_mysql", "mbstring"],
   "ADDITIONAL_PREPROCESS_CMDS": [
-    "bootstrap.sh"
+    "$HOME/bootstrap.sh"
   ]
 }
