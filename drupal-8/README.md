@@ -4,7 +4,29 @@
 
 This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` and `s3` with your site equivalents and everything should just work.
 
+# Quickstart
 
+Assuming you've already clone this repo, and are using this directory:
+
+```
+cf create-service aws-rds shared-mysql d8ex-db
+cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
+cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
+```
+
+Separately, 
+
+```
+cf logs d8ex
+```
+
+# Gotchas:
+
+
+1. `'v3-push' is not a registered command. See 'cf help'` : You'll need to update your CF CLI install.
+
+
+```
 
 
 

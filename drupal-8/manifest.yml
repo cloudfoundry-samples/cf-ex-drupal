@@ -6,3 +6,6 @@ applications:
   services:
     - d8ex-db
     - d8ex-s3
+  env:
+    ACCOUNT_NAME: JOE
+    
