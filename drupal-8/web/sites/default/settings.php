@@ -114,7 +114,6 @@ $config_directories = array();
  * The settings below are for configuring flysystem backends
  */
 
-/* TODO: reinstate from project-planner if needed: 
 $s3_endpoint = (isset($_ENV['AWS_S3_ENDPOINT']) ? $_ENV['AWS_S3_ENDPOINT'] : "s3.amazonaws.com");
 $s3_services = array();
 
@@ -147,7 +146,8 @@ $settings['flysystem']['s3'] = array(
     ),
     'protocol' => 'https',      // Will be autodetected based on the current request.
     'prefix' => 'flysystem-s3', // Directory prefix for all uploaded/viewed files.
-    'cname' => $s3_endpoint
+    'cname' => $s3_endpoint,
+    'endpoint' => "https://$s3_endpoint"
   ),
   'cache' => TRUE, // Creates a metadata cache to speed up lookups.
 );

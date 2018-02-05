@@ -7,14 +7,15 @@
 /web/profiles/contrib/
 /web/libraries/
 
-
+# Typically, composer generates a .gitignore to ignore the 
+# `settings.php` files.  For cloud.gov and Cloud Foundry, no sensitive 
+# information is stored in the settings files. Instead, those files
+# have code that parses environment variables for DB and S3
+#
 # Ignore sensitive information [This is a `composer` default]
 # /web/sites/*/settings.php
 # /web/sites/*/settings.local.php
 
-# For cloud.gov and cloud foundry, no sensitive information
-# is stored in the settings files, and we need to code stored
-# for parsing environment variables.
 
 # Ignore Drupal's file directory
 /web/sites/*/files/

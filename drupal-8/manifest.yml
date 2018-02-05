@@ -8,4 +8,4 @@ applications:
     - d8ex-s3
   env:
     ACCOUNT_NAME: JOE
-    
+    AWS_S3_ENDPOINT: "s3-us-gov-west-1.amazonaws.com"
