@@ -4,14 +4,15 @@
 
 This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` and `s3` with your site equivalents and everything should just work.
 
-# Quickstart
+## Quickstart
 
 Assuming you've already clone this repo, and are using this directory:
 
 Update manifest.yml with:
 
-0. the correct value for `AWS_S3_ENDPOINT` (or comment out for U.S. commercial S3 endpoint)
-0. the correct admin name, `ACCOUNT_NAME`
+1. the correct value for `AWS_S3_ENDPOINT` (or comment out for U.S. commercial S3 endpoint)
+1. the correct admin name, `ACCOUNT_NAME`
+1. run the the following commands:
 
 
 ```
@@ -34,10 +35,16 @@ When the `v3-push` command completes:
 - Login with `ACCOUNT_NAME` and `ACCOUNT_PASS`
 - Update 
 
-# Gotchas:
+## Gotchas:
 
 1. `'v3-push' is not a registered command. See 'cf help'` : You'll need to update your CF CLI install.
 
+
+----
+
+# Notes below this point are still in progress
+
+----
 # Building your own Drupal project
 
 
