@@ -23,7 +23,7 @@ bootstrap() {
     db_host=$(echo $creds | jq -r '.host')
     db_name=$(echo $creds | jq -r '.db_name')
 
-    drupal site:install minimal --root $HOME/web --no-interaction \
+    drupal site:install minimal --root=$HOME/web --no-interaction \
         --account-name=${ACCOUNT_NAME:-$(gen_cred ACCOUNT_NAME)} \
         --account-pass=${ACCOUNT_PASS:-$(gen_cred ACCOUNT_PASS)} \
         --langcode="en" \
@@ -35,5 +35,7 @@ bootstrap() {
         --db-name=$db_name 
 }
 
-drush --root $HOME/web core-status bootstrap | grep -q "Successful" || bootstrap
+drush --root=$HOME/web core-status bootstrap | grep -q "Successful" || bootstrap
+drush --root=$HOME/web pm-info flysystem_s3 --fields=Status | grep -q enabled ||
+    drush --root=$HOME/web pm-enable --yes flysystem_s3
 

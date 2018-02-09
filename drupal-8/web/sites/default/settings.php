@@ -151,8 +151,6 @@ $settings['flysystem']['s3'] = array(
   ),
   'cache' => TRUE, // Creates a metadata cache to speed up lookups.
 );
-*/
-
 
 /**
  * The active installation profile.

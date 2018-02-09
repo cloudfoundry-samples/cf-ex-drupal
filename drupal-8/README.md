@@ -8,14 +8,19 @@ This guide is written for [cloud.gov](https://cloud.gov/) users, but will work f
 
 Assuming you've already clone this repo, and are using this directory:
 
+Update manifest.yml with:
+
+0. the correct value for `AWS_S3_ENDPOINT` (or comment out for U.S. commercial S3 endpoint)
+0. the correct admin name, `ACCOUNT_NAME`
+
+
 ```
 cf create-service aws-rds shared-mysql d8ex-db
-cf create-service s3 basic d8ex-s3
+cf create-service s3 basic-public d8ex-s3
 cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
-# Set the ACCOUNT_NAME and ACCOUNT_PASS as environment variables, or they'll auto-generated
+# Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated
 # and recorded in the logs
-cf set-env d8ex ACCOUNT_NAME <your-account-name>
-cf set-env d8ex ACCOUNT_PASS <your-account->
+cf set-env d8ex ACCOUNT_PASS "your-account-pass"
 cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
 ```
 
@@ -24,8 +29,12 @@ Separately,
 cf logs d8ex
 ```
 
-# Gotchas:
+When the `v3-push` command completes:
+- Visit the site URL
+- Login with `ACCOUNT_NAME` and `ACCOUNT_PASS`
+- Update 
 
+# Gotchas:
 
 1. `'v3-push' is not a registered command. See 'cf help'` : You'll need to update your CF CLI install.
 
@@ -45,10 +54,6 @@ composer require drupal/flysystem_s3
 ```
 
 ## Trying on cloud.gov
-
-```
-cf create-service aws-rds shared-mysql d8ex-db
-```
 
 Added manifest.yml with built-in service reference to d8ex-db and d8ex-s3
 
@@ -97,6 +102,8 @@ https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-
 
 # Known issues
 
-- [ ] HASH SALT not set yet
 - [ ] Flysystem s3 needs testing
+- [ ] HASH SALT not set yet
 - [ ] Install with standard profile instead of minimal
+- [ ] Needs testing in terms of fresh install from composer
+- [ ] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line.

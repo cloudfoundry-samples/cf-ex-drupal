@@ -7,5 +7,5 @@ applications:
     - d8ex-db
     - d8ex-s3
   env:
-    ACCOUNT_NAME: JOE
+    ACCOUNT_NAME: joe
     AWS_S3_ENDPOINT: "s3-us-gov-west-1.amazonaws.com"

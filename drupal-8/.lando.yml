@@ -1,4 +1,0 @@
-name: cg-drupal-8-example
-recipe: drupal8
-config:
-  webroot: ./web
