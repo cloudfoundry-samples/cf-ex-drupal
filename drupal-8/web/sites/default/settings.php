@@ -103,10 +103,12 @@ $databases['default']['default'] = array(
  */
 $config_directories = array();
 
-# TODO: reinstate from project-planner if needed: 
-# note that the __DIR__ pattern has been updated at drupal.org to
-# generally use `$app_root . '/' . $site_path . '/settings.local.php'`
-# $config_directories['sync'] = __DIR__ . '/../../../config';
+/**
+ * TODO: reinstate from project-planner if needed:
+ * note that the __DIR__ pattern has been updated at drupal.org to
+ * generally use `$app_root . '/' . $site_path . '/settings.local.php'`
+ * $config_directories['sync'] = __DIR__ . '/../../../config';
+ */
 
 /**
  * Flysystem.
