@@ -16,8 +16,8 @@ Update manifest.yml with:
 
 
 ```
-cf create-service aws-rds shared-mysql d8ex-db
 cf create-service s3 basic-public d8ex-s3
+cf create-service aws-rds shared-mysql d8ex-db
 cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
 # Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated
 # and recorded in the logs
@@ -98,6 +98,9 @@ export LD_LIBRARY_PATH=/home/vcap/deps/0/lib:/home/vcap/app/php/lib
 export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/php/bin:/home/vcap/app/php/sbin
 ```
 
+# Development notes
+
+Use a dedicate mysql DB so it's easier to clean up without having to reprovision:
 
 # References
 
