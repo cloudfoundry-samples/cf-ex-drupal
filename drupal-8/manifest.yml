@@ -1,11 +1,13 @@
 ---
 applications:
 - name: d8ex 
-  memory: 1024M
+  buildpack: php_buildpack
+  random_route: true
+  memory: 512M
   disk_quota: 512M
   services:
-    - d8ex-db
     - d8ex-s3
+    - d8ex-db
   env:
     ACCOUNT_NAME: joe
     AWS_S3_ENDPOINT: "s3-us-gov-west-1.amazonaws.com"
