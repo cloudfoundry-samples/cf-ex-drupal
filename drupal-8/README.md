@@ -116,4 +116,5 @@ https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-
 - [ ] HASH SALT not set yet
 - [ ] Install with standard profile instead of minimal
 - [ ] Needs testing in terms of fresh install from composer
-- [ ] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line.
+- [x] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line. Answer: not needed
+- [ ] Drupal install requires more than 256MB; need to drop memory limit from 512MB on install back to default 128MB.

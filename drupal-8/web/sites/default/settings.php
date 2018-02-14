@@ -784,17 +784,18 @@ $settings['entity_update_batch_size'] = 50;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 
-/**
- * Collect external service information from environment.
- *
+/** 
+ * Collect external service information from environment. 
  * Cloud Foundry places all service credentials in VCAP_SERVICES
  */
+
 $cf_service_data = json_decode($_ENV['VCAP_SERVICES'], true);
+
+$db_services = array();
 
 foreach($cf_service_data as $service_provider => $service_list) {
   foreach ($service_list as $service) {
-    // looks for tags of 'mysql'
-    if (in_array('mysql', $service['tags'], true)) {
+    if (preg_match('/^mysql2?:/', $service['credentials']['uri'])) {
       $db_services[] = $service;
       continue;
     }
@@ -812,4 +813,3 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
-
