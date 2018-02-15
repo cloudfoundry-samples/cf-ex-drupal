@@ -19,8 +19,7 @@ Update manifest.yml with:
 cf create-service s3 basic-public d8ex-s3
 cf create-service aws-rds shared-mysql d8ex-db
 cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
-# Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated
-# and recorded in the logs
+# Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated and recorded in the logs
 cf set-env d8ex ACCOUNT_PASS "your-account-pass"
 cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack 
 ```
@@ -33,7 +32,18 @@ cf logs d8ex
 When the `v3-push` command completes:
 - Visit the site URL
 - Login with `ACCOUNT_NAME` and `ACCOUNT_PASS`
-- Update 
+- Set up use of S3 Flysystem instead of local disk:
+  - As a admin, go to Configuration -> File system, and set "Default download method" `Flysystem: s3`
+- On a default Drupal install, there should be two fields using the local filesystem. Those fields need to be updated to use Amazon S3:
+  - Image field on Article content type (Structure > Content types > Article > Manage fields > Image)
+  - Image field for User profile picture (Configuration > People > Account settings > Manage fields > Picture)
+
+
+You are all set to use Drupal with Cloud Foundry\*. Congratulations!
+
+
+\*: see "Known Issues", below
+
 
 ## Gotchas:
 
@@ -113,13 +123,20 @@ https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-
 
 # Known issues
 
-- [ ] Flysystem s3 needs testing
+- [x] Flysystem s3 needs testing
 - [ ] HASH SALT not set yet
 - [ ] Install with standard profile instead of minimal
 - [ ] Needs testing in terms of fresh install from composer
 - [x] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line. 
   - ~Answer: not needed~ Still need mysql for `drush`, even though it's not needed for `drupal site-install`
 - [ ] Drupal install requires more than 256MB; need to drop memory limit from 512MB on install back to default 128MB.
+- [ ] Install needs manual intervention to enable S3 storage
+- [ ] Install has Error: "Your sites/default/settings.php file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a sync key."
+- [ ] Install has Error: "The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is highly recommended that you configure this. See Protecting against HTTP HOST Header attacks for more information."
+- [ ] Install has Warning: "PHP OPcode caching can improve your site's performance considerably. It is highly recommended to have OPcache installed on your server."
+- [ ] Handling of ADMIN_PASS: Change to require the env var setting, or fail; or write to local FS and get via `cf ssh`
+
+
 
 ### More notes
 
