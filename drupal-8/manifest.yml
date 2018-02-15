@@ -9,5 +9,6 @@ applications:
     - d8ex-s3
     - d8ex-db
   env:
-    ACCOUNT_NAME: joe
+    # Delete the next line to use the US standard 's3.amazonaws.com'
     AWS_S3_ENDPOINT: "s3-us-gov-west-1.amazonaws.com"
+    ACCOUNT_NAME: joe
