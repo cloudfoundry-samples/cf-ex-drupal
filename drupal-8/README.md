@@ -18,11 +18,11 @@ Update manifest.yml with:
 ```
 cf create-service s3 basic-public d8ex-s3
 cf create-service aws-rds shared-mysql d8ex-db
-cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
+cf push d8ex --no-start 
 # Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated
 # and recorded in the logs
 cf set-env d8ex ACCOUNT_PASS "your-account-pass"
-cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack
+cf push -t 180
 ```
 
 Separately, 
