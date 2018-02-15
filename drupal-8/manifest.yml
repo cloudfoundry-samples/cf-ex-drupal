@@ -12,3 +12,4 @@ applications:
     # Delete the next line to use the US standard 's3.amazonaws.com'
     AWS_S3_ENDPOINT: "s3-us-gov-west-1.amazonaws.com"
     ACCOUNT_NAME: joe
+    HASH_SALT: a98haweo8hninq2345098n

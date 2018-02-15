@@ -81,6 +81,7 @@ Customize for Cloud Foundry by copying the following to your project
 * `apt.yml`
 * `bootstrap.sh`
 * `manifest.yml`
+* `web/sites/default/settings.cf.php`
 
 
 E.g., if you've cloned this project to $HOME/Projects/18f/cf-ex-drupal/, then:
@@ -89,7 +90,7 @@ E.g., if you've cloned this project to $HOME/Projects/18f/cf-ex-drupal/, then:
 SOURCE_DRUPAL=$HOME/Projects/18f/cf-ex-drupal/drupal-8/
 cp -r $SOURCE_DRUPAL/.bp-config .
 git add .bp-config
-for f in .cfignore .gitignore apt.yml bootstrap.sh manifest.yml; do
+for f in .cfignore .gitignore apt.yml bootstrap.sh manifest.yml web/sites/default/settings.cf.php; do
   cp $SOURCE_DRUPAL/$f $f
   git add $f
 done
@@ -97,76 +98,9 @@ done
 
 Add the service parsing to `settings.php` by pasting in the following:
 ```
-/** 
- * Collect external service information from environment. 
- * Cloud Foundry places all service credentials in VCAP_SERVICES
- */
-
-$cf_service_data = json_decode($_ENV['VCAP_SERVICES'], true);
-
-$db_services = array();
-
-foreach($cf_service_data as $service_provider => $service_list) {
-  foreach ($service_list as $service) {
-    if (preg_match('/^mysql2?:/', $service['credentials']['uri'])) {
-      $db_services[] = $service;
-      continue;  // Delete this when you're sure it's not needed
-    }
-  }
+if (file_exists($app_root . '/' . $site_path . '/settings.cf.php')) {
+  include $app_root . '/' . $site_path . '/settings.cf.php';
 }
-
-// Configure Drupal, using the first database found
-$databases['default']['default'] = array (
-  'database' => $db_services[0]['credentials']['db_name'],
-  'username' => $db_services[0]['credentials']['username'],
-  'password' => $db_services[0]['credentials']['password'],
-  'prefix' => '',
-  'host' => $db_services[0]['credentials']['host'],
-  'port' => $db_services[0]['credentials']['port'],
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-  'driver' => 'mysql',
-);
-
-/**
- * Flysystem.
- *
- * The settings below are for configuring flysystem backends
- */
-$s3_endpoint = (isset($_ENV['AWS_S3_ENDPOINT']) ? $_ENV['AWS_S3_ENDPOINT'] : "s3.amazonaws.com");
-$s3_services = array();
-foreach($cf_service_data as $service_provider => $service_list) {
-  foreach ($service_list as $service) {
-    // looks for tags of 's3'
-    if (in_array('S3', $service['tags'], true)) {
-      $s3_services[] = $service;
-      continue;
-    }
-    // look for a service where the name includes 's3'
-    if (strpos($service['name'], 'S3') !== false) {
-      $s3_services[] = $service;
-    }
-  }
-}
-
-$settings['flysystem']['s3'] = array(
-  'driver' => 's3',
-  'config' => array(
-    'key'    => $s3_services[0]['credentials']['access_key_id'],
-    'secret' => $s3_services[0]['credentials']['secret_access_key'],
-    'region' => $s3_services[0]['credentials']['region'],
-    'bucket' => $s3_services[0]['credentials']['bucket'],
-    // Optional configuration settings.
-    'options' => array(
-      'ACL' => 'public-read',
-      'StorageClass' => 'REDUCED_REDUNDANCY',
-    ),
-    'protocol' => 'https',      // Will be autodetected based on the current request.
-    'prefix' => 'flysystem-s3', // Directory prefix for all uploaded/viewed files.
-    'cname' => $s3_endpoint,
-    'endpoint' => "https://$s3_endpoint"
-  ),
-  'cache' => TRUE, // Creates a metadata cache to speed up lookups.
-);
 ```
 
 Now you can push as you did above:
@@ -206,15 +140,16 @@ https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-
 # Known issues
 
 - [x] Flysystem s3 needs testing
-- [ ] HASH SALT not set yet
+- [x] HASH SALT not set yet
 - [ ] Install with standard profile instead of minimal
 - [ ] Needs testing in terms of fresh install from composer
 - [x] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line. 
   - ~Answer: not needed~ Still need mysql for `drush`, even though it's not needed for `drupal site-install`
 - [ ] Drupal install requires more than 256MB; need to drop memory limit from 512MB on install back to default 128MB.
 - [ ] Install needs manual intervention to enable S3 storage
-- [ ] Install has Error: "Your sites/default/settings.php file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a sync key."
+- [x] Install has Error: "Your sites/default/settings.php file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a sync key."
 - [ ] Install has Error: "The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is highly recommended that you configure this. See Protecting against HTTP HOST Header attacks for more information."
 - [ ] Install has Warning: "PHP OPcode caching can improve your site's performance considerably. It is highly recommended to have OPcache installed on your server."
 - [ ] Handling of ADMIN_PASS: Change to require the env var setting, or fail; or write to local FS and get via `cf ssh`
+- [ ] Support Postgresql
 
