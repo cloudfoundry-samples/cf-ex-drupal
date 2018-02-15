@@ -797,7 +797,7 @@ foreach($cf_service_data as $service_provider => $service_list) {
   foreach ($service_list as $service) {
     if (preg_match('/^mysql2?:/', $service['credentials']['uri'])) {
       $db_services[] = $service;
-      continue;
+      continue;  // Delete this when you're sure it's not needed
     }
   }
 }
@@ -812,4 +812,45 @@ $databases['default']['default'] = array (
   'port' => $db_services[0]['credentials']['port'],
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
+);
+
+/**
+ * Flysystem.
+ *
+ * The settings below are for configuring flysystem backends
+ */
+$s3_endpoint = (isset($_ENV['AWS_S3_ENDPOINT']) ? $_ENV['AWS_S3_ENDPOINT'] : "s3.amazonaws.com");
+$s3_services = array();
+foreach($cf_service_data as $service_provider => $service_list) {
+  foreach ($service_list as $service) {
+    // looks for tags of 's3'
+    if (in_array('S3', $service['tags'], true)) {
+      $s3_services[] = $service;
+      continue;
+    }
+    // look for a service where the name includes 's3'
+    if (strpos($service['name'], 'S3') !== false) {
+      $s3_services[] = $service;
+    }
+  }
+}
+
+$settings['flysystem']['s3'] = array(
+  'driver' => 's3',
+  'config' => array(
+    'key'    => $s3_services[0]['credentials']['access_key_id'],
+    'secret' => $s3_services[0]['credentials']['secret_access_key'],
+    'region' => $s3_services[0]['credentials']['region'],
+    'bucket' => $s3_services[0]['credentials']['bucket'],
+    // Optional configuration settings.
+    'options' => array(
+      'ACL' => 'public-read',
+      'StorageClass' => 'REDUCED_REDUNDANCY',
+    ),
+    'protocol' => 'https',      // Will be autodetected based on the current request.
+    'prefix' => 'flysystem-s3', // Directory prefix for all uploaded/viewed files.
+    'cname' => $s3_endpoint,
+    'endpoint' => "https://$s3_endpoint"
+  ),
+  'cache' => TRUE, // Creates a metadata cache to speed up lookups.
 );

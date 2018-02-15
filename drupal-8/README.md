@@ -18,11 +18,11 @@ Update manifest.yml with:
 ```
 cf create-service s3 basic-public d8ex-s3
 cf create-service aws-rds shared-mysql d8ex-db
-cf push d8ex --no-start 
+cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
 # Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated
 # and recorded in the logs
 cf set-env d8ex ACCOUNT_PASS "your-account-pass"
-cf push -t 180
+cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack 
 ```
 
 Separately, 
@@ -94,6 +94,7 @@ export PYTHONPATH=/home/vcap/app/.bp/lib
 export TMPDIR=/home/vcap/tmp
 export LIBRARY_PATH=/home/vcap/deps/0/lib
 export PHPRC=/home/vcap/app/php/etc
+export PHP_INI_SCAN_DIR=/home/vcap/app/php/etc/php.ini.d
 export LD_LIBRARY_PATH=/home/vcap/deps/0/lib:/home/vcap/app/php/lib
 export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/php/bin:/home/vcap/app/php/sbin
 ```
@@ -116,5 +117,12 @@ https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-
 - [ ] HASH SALT not set yet
 - [ ] Install with standard profile instead of minimal
 - [ ] Needs testing in terms of fresh install from composer
-- [x] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line. Answer: not needed
+- [x] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line. 
+  - ~Answer: not needed~ Still need mysql for `drush`, even though it's not needed for `drupal site-install`
 - [ ] Drupal install requires more than 256MB; need to drop memory limit from 512MB on install back to default 128MB.
+
+### More notes
+
+ Sync config path       :  sites/default/files/config__ULBmII0cfQoLIWYss4CSIu1GKJXGgSXkW8sJfxRaHTwzCE2xvootYCHpM6XFDiDF5lVKQu
+                           JeA/sync
+
