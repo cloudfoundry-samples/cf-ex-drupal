@@ -1,4 +1,5 @@
 ---
 ## other configuration excluded from example...
 exclude_patterns:
-- "scripts/composer/ScriptHandler.php"
+  - "drupal-8/scripts/composer/ScriptHandler.php"
+
