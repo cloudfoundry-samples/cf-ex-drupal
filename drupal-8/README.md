@@ -19,16 +19,15 @@ Log in to Cloud Foundry (e.g. `cf login --sso -a https://api.fr.cloud.gov`), the
 cf create-service s3 basic-public d8ex-s3
 cf create-service aws-rds shared-mysql d8ex-db
 cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
-# Set the ACCOUNT_PASS as an environment variable, or it'll be auto-generated and recorded in the logs
+# Set the ACCOUNT_PASS as an environment variable 
 cf set-env d8ex ACCOUNT_PASS "your-account-pass"
 cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack 
 ```
 
-This project uses the "multi-buildpack" feature of Cloud Foundry, since we need `apt` to install the `mysql` client, and the `php_buildpack` for Drupal itself. The `v3-push` is experimental, so the syntax and usage may change.
+This project uses the "multi-buildpack" feature of Cloud Foundry, since we need `apt` to install the `mysql` client, and the `php_buildpack` for Drupal itself. The `v3-push` is experimental, so the syntax and usage may change.  Note: The two-push workflow is currently required because only `v3-push` supports multiple buildpacks.
 
 
 When the `v3-push` command completes:
-- If you didn't set ACCOUNT_PASS, then use `cf logs d8ex --recent | grep ACCOUNT_PASS` to determine the password
 - Visit the site URL
 - Login with `ACCOUNT_NAME` and `ACCOUNT_PASS`
 - Set up use of S3 Flysystem instead of local disk:
@@ -37,19 +36,13 @@ When the `v3-push` command completes:
   - Image field on Article content type (Structure > Content types > Article > Manage fields > Image)
   - Image field for User profile picture (Configuration > People > Account settings > Manage fields > Picture)
 
-
 You are all set to use Drupal with Cloud Foundry\*. Congratulations!
-
-
-\*: see "Known Issues", below
 
 
 ## Gotchas:
 
 1. `'v3-push' is not a registered command. See 'cf help'` : You'll need to update your CF CLI install.
 
-
-----
 # Building your own Drupal project
 
 This project demonstrates a Drupal project initiated with `composer`. Let's step through the process so you can repeat for your Drupal project. The steps are for MacOS. 
@@ -73,7 +66,6 @@ git add .
 git commit -m "Initial commit from composer"
 ```
 
-
 Customize for Cloud Foundry by copying the following to your project
 * Copy the `.bp-config/` directory to your project
 * `.cfignore`
@@ -82,7 +74,6 @@ Customize for Cloud Foundry by copying the following to your project
 * `bootstrap.sh`
 * `manifest.yml`
 * `web/sites/default/settings.cf.php`
-
 
 E.g., if you've cloned this project to $HOME/Projects/18f/cf-ex-drupal/, then:
 
@@ -105,7 +96,6 @@ if (file_exists($app_root . '/' . $site_path . '/settings.cf.php')) {
 
 Now you can push as you did above:
 
-
 # Debugging
 
 ## SSH Setup
@@ -124,32 +114,9 @@ export LD_LIBRARY_PATH=/home/vcap/deps/0/lib:/home/vcap/app/php/lib
 export PATH=/home/vcap/deps/0/bin:/usr/local/bin:/usr/bin:/bin:/home/vcap/app/php/bin:/home/vcap/app/php/sbin
 ```
 
-## Development notes
-
-Use a dedicated mysql DB so it's easier to clean up without having to reprovision:
-
-
 # References
 
-These are complementary to what's described here for running on Heroku
+These blog posts by Federico Jaramillo Martínez on running Drupal 8 on Heroku are complementary to this guide, and provided this author with some useful tips
 
-https://www.fomfus.com/articles/how-to-create-a-drupal-8-project-for-heroku-part-1
+https://www.fomfus.com/articles/how-to-create-a-drupal-8-project-for-heroku-part-1<br>
 https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-2
-
-
-# Known issues
-
-- [x] Flysystem s3 needs testing
-- [x] HASH SALT not set yet
-- [ ] Install with standard profile instead of minimal
-- [ ] Needs testing in terms of fresh install from composer
-- [x] Determine if `apt` buildpack is still necessary with `drupal-console`, as it may use PHP libraries instead of the mysql command line. 
-  - ~Answer: not needed~ Still need mysql for `drush`, even though it's not needed for `drupal site-install`
-- [ ] Drupal install requires more than 256MB; need to drop memory limit from 512MB on install back to default 128MB.
-- [ ] Install needs manual intervention to enable S3 storage
-- [x] Install has Error: "Your sites/default/settings.php file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a sync key."
-- [ ] Install has Error: "The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is highly recommended that you configure this. See Protecting against HTTP HOST Header attacks for more information."
-- [ ] Install has Warning: "PHP OPcode caching can improve your site's performance considerably. It is highly recommended to have OPcache installed on your server."
-- [ ] Handling of ADMIN_PASS: Change to require the env var setting, or fail; or write to local FS and get via `cf ssh`
-- [ ] Support Postgresql
-
