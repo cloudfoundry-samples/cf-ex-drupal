@@ -1,11 +1,7 @@
 #!/bin/bash 
 set -euxo pipefail
 
-gen_cred() {
-    cred=$(cat /dev/urandom | head | tr -dc _A-Z-a-z-0-9 | head -c32; echo;)
-    echo SETTING CREDENTIAL $1 = $cred >&2
-    echo $cred
-}
+: ${ACCOUNT_NAME?} ${ACCOUNT_PASS?}
 
 fail() {
     echo FAIL $@
@@ -36,6 +32,7 @@ bootstrap() {
 }
 
 drush --root=$HOME/web core-status bootstrap | grep -q "Successful" || bootstrap
+
 drush --root=$HOME/web pm-info flysystem_s3 --fields=Status | grep -q enabled ||
     drush --root=$HOME/web pm-enable --yes flysystem_s3
 
