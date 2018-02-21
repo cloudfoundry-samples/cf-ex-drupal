@@ -33,8 +33,8 @@ When the `v3-push` command completes:
 - Set up use of S3 Flysystem instead of local disk:
   - As a admin, go to Configuration -> File system, and set "Default download method" `Flysystem: s3`
 - On a default Drupal install, there should be two fields using the local filesystem. Those fields need to be updated to use Amazon S3:
-  - Image field on Article content type (Structure > Content types > Article > Manage fields > Image)
-  - Image field for User profile picture (Configuration > People > Account settings > Manage fields > Picture)
+  - _Image_ field on _Article_ content type (Structure > Content types > Article > Manage fields > Image)
+  - _Image_ field for _User_ profile picture (Configuration > People > Account settings > Manage fields > Picture)
 
 You are all set to use Drupal with Cloud Foundry\*. Congratulations!
 
