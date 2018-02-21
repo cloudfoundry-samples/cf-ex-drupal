@@ -1,5 +1,5 @@
 ---
-## other configuration excluded from example...
+# ScriptHandler has a 35-line fun `createRequiredFiles`
 exclude_patterns:
   - "drupal-8/scripts/composer/ScriptHandler.php"
 
