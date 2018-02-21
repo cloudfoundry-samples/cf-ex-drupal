@@ -2,9 +2,10 @@
 applications:
 - name: d8ex 
   buildpack: php_buildpack
-  random_route: true
+  random-route: true
   memory: 512M
   disk_quota: 512M
+  timeout: 180
   services:
     - d8ex-s3
     - d8ex-db
