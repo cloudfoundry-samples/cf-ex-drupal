@@ -2,7 +2,7 @@
 
 [Drupal](https://drupal.org) has been a popular PHP-based framework for content-management systems and web applications. It was not written as a cloud-native framework, so it takes a bit of tweaking to run on cloud.gov, or any other Cloud Foundry implementation. If you're on a _greenfield_ project you may want to consider other PHP frameworks, but if you're going forward with Drupal then this guide will get you there.
 
-This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` and `s3` with your site equivalents and everything should just work. 
+This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` (mysql) and `s3` (s3 bucket) with your site equivalents and everything should just work. 
 
 ## Quickstart
 
