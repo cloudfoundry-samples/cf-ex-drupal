@@ -2,7 +2,7 @@
 
 [Drupal](https://drupal.org) has been a popular PHP-based framework for content-management systems and web applications. It was not written as a cloud-native framework, so it takes a bit of tweaking to run on cloud.gov, or any other Cloud Foundry implementation. If you're on a _greenfield_ project you may want to consider other PHP frameworks, but if you're going forward with Drupal then this guide will get you there.
 
-This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` and `s3` with your site equivalents and everything should just work. 
+This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` (mysql) and `s3` (s3 bucket) with your site equivalents and everything should just work. 
 
 ## Quickstart
 
@@ -33,8 +33,8 @@ When the `v3-push` command completes:
 - Set up use of S3 Flysystem instead of local disk:
   - As a admin, go to Configuration -> File system, and set "Default download method" `Flysystem: s3`
 - On a default Drupal install, there should be two fields using the local filesystem. Those fields need to be updated to use Amazon S3:
-  - Image field on Article content type (Structure > Content types > Article > Manage fields > Image)
-  - Image field for User profile picture (Configuration > People > Account settings > Manage fields > Picture)
+  - _Image_ field on _Article_ content type (Structure > Content types > Article > Manage fields > Image)
+  - _Image_ field for _User_ profile picture (Configuration > People > Account settings > Manage fields > Picture)
 
 You are all set to use Drupal with Cloud Foundry\*. Congratulations!
 
