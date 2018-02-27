@@ -120,3 +120,13 @@ These blog posts by Federico Jaramillo Martínez on running Drupal 8 on Heroku a
 
 https://www.fomfus.com/articles/how-to-create-a-drupal-8-project-for-heroku-part-1<br>
 https://www.fomfus.com/articles/how-to-deploy-a-drupal-8-project-to-heroku-part-2
+
+# Licenses
+
+Core Drupal is under the [GNU General Public License v2](./LICENSE). 
+
+This project to enable running Drupal in cloud.gov is a work of the United
+States Government, and is in the public domain within the United
+States.  Additionally, we waive copyright and related rights to 
+this work worldwide through the [CC0 1.0 Universal public
+domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
