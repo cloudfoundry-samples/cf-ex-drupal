@@ -12,9 +12,9 @@ _log = logging.getLogger('drupal')
 
 
 DEFAULTS = utils.FormattedDict({
-    'DRUPAL_VERSION': '7.57',
+    'DRUPAL_VERSION': '7.58',
     'DRUPAL_PACKAGE': 'drupal-{DRUPAL_VERSION}.tar.gz',
-    'DRUPAL_HASH': '44dec95a0ef56c4786785f575ac59a60',
+    'DRUPAL_HASH': 'c59949bcfd0d68b4f272bc05a91d4dc6',
     'DRUPAL_URL': 'http://ftp.drupal.org/files/projects/{DRUPAL_PACKAGE}'
 })
 
