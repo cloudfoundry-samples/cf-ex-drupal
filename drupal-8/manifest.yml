@@ -1,16 +1,16 @@
 ---
 applications:
-- name: d8ex 
-  buildpack: php_buildpack
+- name: drupal8-example 
+  buildpack: https://github.com/cloudfoundry/multi-buildpack#v1.0.3
   random-route: true
   memory: 512M
   disk_quota: 512M
   timeout: 180
   services:
-    - d8ex-s3
-    - d8ex-db
+    - drupal8-example-secrets
+    - drupal8-example-s3
+    - drupal8-example-db
   env:
     # Delete the next line to use the US standard 's3.amazonaws.com'
     AWS_S3_ENDPOINT: "s3-us-gov-west-1.amazonaws.com"
-    ACCOUNT_NAME: joe
     HASH_SALT: a98haweo8hninq2345098n

@@ -1,5 +1,4 @@
 {
-  "ADMIN_EMAIL": "your-email@example.com",
   "COMPOSER_INSTALL_OPTIONS": [
     "--no-dev --optimize-autoloader --no-progress --no-interaction"
   ],
