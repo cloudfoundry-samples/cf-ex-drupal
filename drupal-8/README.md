@@ -4,6 +4,8 @@
 
 This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` (mysql) and `s3` (s3 bucket) with your site equivalents and everything should just work. 
 
+This project is meant as a demonstration only. For an example Drupal project running on cloud.gov with a well-established development workflow, see the [National Science Foundation Drupal repository](https://github.com/18f/nsf).
+
 ## Quickstart
 
 ### Preliminaries
@@ -33,6 +35,7 @@ cf create-user-provided-service drupal8-example-secrets \
    ``` 
    cf create-user-provided-service drupal8-example-secrets \
   -p '{"ADMIN_NAME":"cloudgov-admin", "ADMIN_PASS":"secret"}'
+  ```
 
 Run these commands to create the backing services:
 ```
@@ -58,10 +61,6 @@ When the `push` command completes:
   - _Image_ field for _User_ profile picture (Configuration > People > Account settings > Manage fields > Picture)
 
 You are all set to use Drupal with Cloud Foundry\*. Congratulations!
-
-## Gotchas:
-
-1. `'v3-push' is not a registered command. See 'cf help'` : You'll need to update your CF CLI install.
 
 # Building your own Drupal project
 
