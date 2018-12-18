@@ -4,32 +4,56 @@
 
 This guide is written for [cloud.gov](https://cloud.gov/) users, but will work for any Cloud Foundry site. Just replace the specifics for `aws-rds` (mysql) and `s3` (s3 bucket) with your site equivalents and everything should just work. 
 
+This project is meant as a demonstration only. For an example Drupal project running on cloud.gov with a well-established development workflow, see the [National Science Foundation Drupal repository](https://github.com/18f/nsf).
+
 ## Quickstart
 
-You can demonstrate a fully-functional Drupal install assuming you've already cloned this repo, and are using this directory:
+### Preliminaries
 
-Update `manifest.yml` with:
+You can demonstrate a fully-functional Drupal install assuming:
+1. you've already cloned this repo, and
+1. are using this directory
 
-1. the correct admin name, `ACCOUNT_NAME`
-1. delete or change the `AWS_S3_ENDPOINT` if you're _not_ on cloud.gov
+If you're _not_ using cloud.gov:
+* Update `manifest.yml` to change the `AWS_S3_ENDPOINT` 
+
+### Demo
 
 Log in to Cloud Foundry (e.g. `cf login --sso -a https://api.fr.cloud.gov`), then run the following commands for cloud.gov:
 
+First, set an admin password (if you're using Unix-type shell):
 ```
-cf create-service s3 basic-public d8ex-s3
-cf create-service aws-rds shared-mysql d8ex-db
-cf push d8ex --no-start -b  https://github.com/cloudfoundry/apt-buildpack.git
-# Set the ACCOUNT_PASS as an environment variable 
-cf set-env d8ex ACCOUNT_PASS "your-account-pass"
-cf v3-push d8ex -b https://github.com/cloudfoundry/apt-buildpack.git -b php_buildpack 
+export ADMIN_PASS=yourpassword
+```
+Then create a `user-provided-service` to provide that password to the application:
+```
+cf create-user-provided-service drupal8-example-secrets \
+  -p '{"ADMIN_NAME":"cloudgov-admin", "ADMIN_PASS":"'${ADMIN_PASS:=secret}'"}'
 ```
 
-This project uses the "multi-buildpack" feature of Cloud Foundry, since we need `apt` to install the `mysql` client, and the `php_buildpack` for Drupal itself. The `v3-push` is experimental, so the syntax and usage may change.  Note: The two-push workflow is currently required because only `v3-push` supports multiple buildpacks.
+> If you are using PowerShell, then replace `secret` below with a real password
+   ``` 
+   cf create-user-provided-service drupal8-example-secrets \
+  -p '{"ADMIN_NAME":"cloudgov-admin", "ADMIN_PASS":"secret"}'
+  ```
 
+Run these commands to create the backing services:
+```
+cf create-service s3 basic-public drupal8-example-s3
+cf create-service aws-rds shared-mysql drupal8-example-db
+```
 
-When the `v3-push` command completes:
+Now, use the `push` command to send the files to Cloud Foundry, package, and start the application:
+```
+cf push 
+```
+
+This project uses the "multi-buildpack" feature of Cloud Foundry, since we need `apt` to install the `mysql` client, and the `php_buildpack` for Drupal itself. 
+
+When the `push` command completes:
 - Visit the site URL
-- Login with `ACCOUNT_NAME` and `ACCOUNT_PASS`
+- Login with `ADMIN_NAME` and `ADMIN_PASS`
+  - If you didn't run the `export ADMIN_PASS` command, then your password is `secret`
 - Set up use of S3 Flysystem instead of local disk:
   - As a admin, go to Configuration -> File system, and set "Default download method" `Flysystem: s3`
 - On a default Drupal install, there should be two fields using the local filesystem. Those fields need to be updated to use Amazon S3:
@@ -37,11 +61,6 @@ When the `v3-push` command completes:
   - _Image_ field for _User_ profile picture (Configuration > People > Account settings > Manage fields > Picture)
 
 You are all set to use Drupal with Cloud Foundry\*. Congratulations!
-
-
-## Gotchas:
-
-1. `'v3-push' is not a registered command. See 'cf help'` : You'll need to update your CF CLI install.
 
 # Building your own Drupal project
 
@@ -52,10 +71,10 @@ Install composer:
 brew install homebrew/php/composer
 ```
 
-Create a fresh Drupal8 project named `d8ex`:
+Create a fresh Drupal8 project named `drupal8-example`:
 ```
-composer create-project drupal-composer/drupal-project:8.x-dev d8ex --stability dev --no-interaction
-cd d8ex
+composer create-project drupal-composer/drupal-project:8.x-dev drupal8-example --stability dev --no-interaction
+cd drupal8-example
 composer require drupal/flysystem_s3
 ```
 
