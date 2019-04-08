@@ -1,5 +1,0 @@
-# These dependencies are pinned so that upgrades are explicit
-buildpacks:
-  # We need the "apt" build pack to install a mysql client for drush
-  - https://github.com/cloudfoundry/apt-buildpack#v0.1.1
-  - https://github.com/cloudfoundry/php-buildpack#v4.3.51
