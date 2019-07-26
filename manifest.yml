@@ -1,8 +1,11 @@
 ---
 applications:
 - name: cf-ex-drupal
+  buildpack: php_buildpack
   memory: 128M
   instances: 1
   path: .
   services:
-  - mysql
+  - my-db-service
+  env:
+    DRUPAL_HASH_SALT: secure-random-string
