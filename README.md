@@ -6,11 +6,38 @@ This is an out-of-the-box implementation of Drupal.  It's an example of how comm
 
 ### Usage
 
-1. Clone the app (i.e. this repo).
+1. Download the latest version of Drupal from [the project site](https://www.drupal.org/download) (get the tar.gz download).
+
+1. Extract all of the files from Drupal to the `htdocs` directory. For example: `tar -zx --strip-components=1 -C htdocs/ -f ~/Downloads/drupal-8.8.2.tar.gz`. When done, you should have an `htdocs` directory that looks like this...
 
   ```bash
-  git clone https://github.com/cloudfoundry-samples/cf-ex-drupal.git cf-ex-drupal
-  cd cf-ex-drupal
+  drwxr-xr-x  27 piccolo  wheel     864 Mar  3 13:42 .
+  drwxr-xr-x  11 piccolo  wheel     352 Mar  3 13:41 ..
+  -rw-r--r--@  1 piccolo  wheel    1025 Feb  1 18:15 .csslintrc
+  -rw-r--r--@  1 piccolo  wheel     357 Feb  1 18:15 .editorconfig
+  -rw-r--r--@  1 piccolo  wheel     151 Feb  1 18:15 .eslintignore
+  -rw-r--r--@  1 piccolo  wheel      41 Feb  1 18:15 .eslintrc.json
+  -rw-r--r--   1 piccolo  wheel       0 Mar  3 13:41 .git_placeholder
+  -rw-r--r--@  1 piccolo  wheel    3858 Feb  1 18:15 .gitattributes
+  -rw-r--r--@  1 piccolo  wheel    2314 Feb  1 18:15 .ht.router.php
+  -rw-r--r--@  1 piccolo  wheel    7878 Feb  1 18:15 .htaccess
+  -rw-r--r--@  1 piccolo  wheel      95 Feb  1 18:15 INSTALL.txt
+  -rw-r--r--@  1 piccolo  wheel   18092 Nov 16  2016 LICENSE.txt
+  -rw-r--r--@  1 piccolo  wheel    5889 Feb  1 18:15 README.txt
+  -rw-r--r--@  1 piccolo  wheel     313 Feb  1 18:15 autoload.php
+  -rw-r--r--@  1 piccolo  wheel    2796 Feb  1 18:12 composer.json
+  -rw-r--r--@  1 piccolo  wheel  134184 Feb  1 18:12 composer.lock
+  drwxr-xr-x@ 46 piccolo  wheel    1472 Feb  1 18:15 core
+  -rw-r--r--@  1 piccolo  wheel    1507 Feb  1 18:15 example.gitignore
+  -rw-r--r--@  1 piccolo  wheel     549 Feb  1 18:15 index.php
+  drwxr-xr-x@  3 piccolo  wheel      96 Feb  1 18:15 modules
+  drwxr-xr-x@  3 piccolo  wheel      96 Feb  1 18:15 profiles
+  -rw-r--r--@  1 piccolo  wheel    1594 Feb  1 18:15 robots.txt
+  drwxr-xr-x@  7 piccolo  wheel     224 Feb  1 18:15 sites
+  drwxr-xr-x@  3 piccolo  wheel      96 Feb  1 18:15 themes
+  -rw-r--r--@  1 piccolo  wheel     848 Feb  1 18:15 update.php
+  drwxr-xr-x@ 23 piccolo  wheel     736 Feb  1 18:15 vendor
+  -rw-r--r--@  1 piccolo  wheel    4566 Feb  1 18:15 web.config
   ```
 
 1.  If you don't have one already, create a MySQL service.  With Pivotal Web Services, the following command will create a free MySQL database through [ClearDb].  Any MySQL provider should work.
@@ -19,7 +46,51 @@ This is an out-of-the-box implementation of Drupal.  It's an example of how comm
   cf create-service cleardb spark mysql
   ```
 
-1. Edit `sites/default/settings.php` and change the `drupal_hash_salt`.  This should be uniqe for every installation.  Optionally edit any other settings, however you do *not* need to edit the database configuration.  The file included with this example will automatically pull that information from `VCAP_SERVICES`.
+1. Copy `sites/default/default.settings.php` to `sites/default/settings.php`.
+
+1. Edit `sites/default/settings.php` and change the value of `$settings['hash_salt'] = '';` to a random value you create. This should be unique for every installation.  
+
+1. Also in `sites/default/settings.php`, add the following code to configure a database connection. It should be added directly below the line: `$databases = [];`.
+
+  ```php
+  /*
+  * Read MySQL service properties from 'VCAP_SERVICES' env variable
+  */
+  $service_blob = json_decode(getenv('VCAP_SERVICES'), true);
+  $mysql_services = array();
+  foreach($service_blob as $service_provider => $service_list) {
+      // looks for 'cleardb' or 'p-mysql' service
+      if ($service_provider === 'cleardb' || $service_provider === 'p-mysql') {
+          foreach($service_list as $mysql_service) {
+              $mysql_services[] = $mysql_service;
+          }
+          continue;
+      }
+      foreach ($service_list as $some_service) {
+          // looks for tags of 'mysql'
+          if (in_array('mysql', $some_service['tags'], true)) {
+              $mysql_services[] = $some_service;
+              continue;
+          }
+          // look for a service where the name includes 'mysql'
+          if (strpos($some_service['name'], 'mysql') !== false) {
+              $mysql_services[] = $some_service;
+          }
+      }
+  }
+
+  // Configure Drupal, using the first database found
+  $databases['default']['default'] = array(
+      'driver' => 'mysql',
+      'database' => $mysql_services[0]['credentials']['name'],
+      'username' => $mysql_services[0]['credentials']['username'],
+      'password' => $mysql_services[0]['credentials']['password'],
+      'host' => $mysql_services[0]['credentials']['hostname'],
+      'prefix' => 'drupal_',
+  );
+  ```
+
+1. Optionally edit any other settings in `settings.php`. For more details on manually installing Drupal, see [here](https://www.drupal.org/docs/7/install/step-3-create-settingsphp-and-the-files-directory). Save and close when you are finished.
 
 1. Push it to CloudFoundry.
 
@@ -28,27 +99,6 @@ This is an out-of-the-box implementation of Drupal.  It's an example of how comm
   ```
 
 1. On your first push, you'll need to access the install script.  It'll be `http://<your-host-name>.cfapps.io/install.php`.  Follow instructions there to complete the install.  After it's done, you'll be all set.
-
-
-### How It Works
-
-When you push the application here's what happens.
-
-1. The local bits are pushed to your target.  This is small, five files around 25k. It includes the changes we made and a build pack extension for Drupal.
-1. The server downloads the [PHP Build Pack] and runs it.  This installs HTTPD and PHP.
-1. The build pack sees the extension that we pushed and runs it.  The extension downloads the stock Drupal file from their server, unzips it and installs it into the `htdocs` directory.  It then copies the rest of the files that we pushed and replaces the default Drupal files with them.  In this case, it's just the `sites/default/settings.php` file.
-1. At this point, the build pack is done and CF runs our droplet.
-
-
-### Changes
-
-1. I include a [custom list of HTTPD modules](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.bp-config/httpd/extra/httpd-modules.conf#L15).  These are the same as the default, but I've added `mod_access_compat`, which is necessary because Drupal's `.htaccess` file still uses HTTPD 2.2 config.
-
-1. I [add the PHP extensions](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.bp-config/options.json#L2) that are needed by Drupal.
-
-1. I add a [custom build pack extension](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py), which downloads Drupal on the remote server.  This is not strictly necessary, but it saves me from having to upload a lot of files on each push.  The version of Drupal that will be installed is [here](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/.extensions/drupal/extension.py#L15).
-
-1. I include a [copy of the default settings from the standard Drupal install](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php).  This is [modified](https://github.com/cloudfoundry-samples/cf-ex-drupal/blob/master/htdocs/sites/default/settings.php#L216-L251) to pull the database configuration from the `VCAP_SERVICES` environment variable, which is populated with information from services that are bound to the app.  Since we bind a MySQL service to our app in the instructions above, we search for that and automatically configure it for use with Drupal.
 
 ### Caution
 
